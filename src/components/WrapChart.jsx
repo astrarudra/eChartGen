@@ -196,10 +196,10 @@ export default class WrapChart extends Component {
         var isTitle = settings.isTitle === undefined ? true : settings.isTitle
         return (
             <div className="wrap-table p-t-10">
-             {showdiv && isTitle ? <div style={{ height:"8vh", fontWeight:"bold"}}>
+             {showdiv && isTitle ? <div style={{ height:"8vh"}}>
                  <div style={{width:"100%", textAlign:position}}>
-                {settings.title ? <div style={{fontSize:"20px", color:"red", width:"20%", height:"4vh", backgroundColor:"none", textAlign:"center" }}>{settings.title}</div>:null}
-                {settings.subtitle ? <div style={{width:"20%", height:"4vh", textAlign:"center", backgroundColor:"none" }}>{settings.subtitle}</div>:null}
+                {settings.title ? <div style={{fontSize:"20px", color:"#5B5B5B", width:"20%", height:"4vh", backgroundColor:"lightgrey", textAlign:"center", fontWeight:"bold" }}>{settings.title}</div>:null}
+                {settings.subtitle ? <div style={{width:"20%", color:"#5B5B5B",  height:"4vh", textAlign:"center", backgroundColor:"lightgrey" }}>{settings.subtitle}</div>:null}
                 </div>
             </div>: null }
                 {buttons ? buttons.map((buttonList, index) => {
