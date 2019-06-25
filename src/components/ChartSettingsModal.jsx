@@ -23,7 +23,7 @@ export default class FieldSettingsModal extends Component {
     constructor(props) {
         super()
         var { chart } = props;
-        this.state = chart
+        this.state = _.cloneDeep(chart)
     }
 
     apply = () => {
@@ -31,10 +31,21 @@ export default class FieldSettingsModal extends Component {
     }
 
     changeSettings = (selected, property) => {
+        console.log(selected,"check selected");
+        // if(property==="position"){
+        //     this.props.getTitlePosition(selected.value)
+        // }
         var { settings } = this.state
         settings[property] = selected
         this.setState({settings})
     }
+
+    // getTitlePosition = (selected, property) =>{
+    //     console.log(selected,"check o for props");
+    //     var { settings } = this.state
+    //     settings[property] = selected
+    //     this.setState({settings})
+    // }
 
     customSettings = (selected, o) => {
         var { fields } = this.state
@@ -51,10 +62,16 @@ export default class FieldSettingsModal extends Component {
     }
 
     render(){
-        var { chartSettings } = this.props;
+        var { chartSettings , toggle } = this.props;
+        // var alignTitle=[
+        //                 {label:"Left", value:"-webkit-left" },
+        //                 {label:"Center", value:"-webkit-center" },
+        //                 {label:"Right", value:"-webkit-right" }
+        //                ]
         
         var { settings , fields } = this.state
-        var { type , position , title , subtitle } = settings
+        var { type , position , title , subtitle, isTitle } = settings
+        console.log(settings,"settings in clg cc");
         
         var AGG_LIST = []
         var metricList = _.filter(fields, o => o.ddField === METRIC)
@@ -73,11 +90,13 @@ export default class FieldSettingsModal extends Component {
                 <div>
                     <div className="m-t-10">
                         <div className="d-flex">
-                                <div style={{width: '50%'}}>Chart Title </div>
+                                <div style={{width: '45%'}}>Chart Title </div>
+                                <div style={{width: '5%'}}><Checkbox title="" styleName="default" onChange={() => this.changeSettings(!isTitle, "isTitle")} isChecked={isTitle} /></div>
                                 <input 
                                     value={title} 
                                     onChange={(e)=> this.changeSettings(e.target.value, "title")}>
                                 </input>
+                                {/* <div style={{width: '25%', height:"10px", zIndex:16}}><SelectDD data={alignTitle} onChange={(o) => this.getTitlePosition(o, "position")} selected={position}/></div> */}
                         </div>
                     </div>
                     <div className="m-t-10">
@@ -92,13 +111,13 @@ export default class FieldSettingsModal extends Component {
                     <div className="m-t-10">
                         <div className="d-flex">
                                 <div style={{width: '50%'}}>Position</div>
-                                <div style={{width: '50%'}}><SelectDD data={POS_LIST} onChange={(o) => this.changeSettings(o, "position")} selected={position}/></div>
+                                <div style={{width: '50%', zIndex:15}}><SelectDD data={POS_LIST} onChange={(o) => this.changeSettings(o, "position")} selected={position}/></div>
                         </div>
                     </div>
                     <div className="m-t-10">
                         <div className="d-flex">
                                 <div style={{width: '50%'}}>Chart Type</div>
-                                <div style={{width: '50%'}}><SelectDD data={CHART_LIST} onChange={(o) => this.changeSettings(o, "type")} selected={type} isClearable={false} /></div>
+                                <div style={{width: '50%', zIndex:12}}><SelectDD data={CHART_LIST} onChange={(o) => this.changeSettings(o, "type")} selected={type} isClearable={false} /></div>
                         </div>
                     </div>
 
@@ -111,12 +130,12 @@ export default class FieldSettingsModal extends Component {
                             </div>
                         </div>
                         <div>
-                            {AGG_LIST.map(o => {
+                            {AGG_LIST.map((o,i) => {
                                 return (
                                     <div className="d-flex">
                                         <div style={{width: '40%'}}>{o.label}</div>
-                                        <div style={{width: '20%'}}><Checkbox title="" styleName="default" onChange={() => this.axisSettings(!o.yAxis, o)} isChecked={o.yAxis} /></div>
-                                        {type.value === 'custom' ? <div style={{width: '40%'}}><SelectDD data={CHART_CUSTOM_LIST} onChange={(selected) => this.customSettings(selected, o)} selected={o.selected} isClearable={false} /></div>: null}
+                                        <div style={{width: '20%', zIndex:10-i}}><Checkbox title="" styleName="default" onChange={() => this.axisSettings(!o.yAxis, o)} isChecked={o.yAxis} /></div>
+                                        {type.value === 'custom' ? <div style={{width: '40%', zIndex:10-i}}><SelectDD data={CHART_CUSTOM_LIST} onChange={(selected) => this.customSettings(selected, o)} selected={o.selected} isClearable={false} /></div>: null}
                                     </div>
                                 )
                             })}
@@ -125,7 +144,7 @@ export default class FieldSettingsModal extends Component {
                 </div>
                 <div className="m-t-10">
                     <div className="btn btn-sm btn-primary" onClick={this.apply}>Apply</div>
-                    <div className="btn btn-sm btn-primary m-l-10" onClick={chartSettings}>Cancel</div>
+                    <div className="btn btn-sm btn-primary m-l-10" onClick={toggle}>Cancel</div>
                 </div>
             </ModalBody>
         )

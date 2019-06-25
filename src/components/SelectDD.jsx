@@ -42,7 +42,7 @@ class SelectDD extends Component {
 
         return (
             <div style={{height: '35px'}}>
-                <div style={{overflow: 'visible', zIndex: 100, position: 'sticky'}}>
+                <div style={{overflow: 'visible', zIndex: 0, position: 'sticky'}}>
                     <Select options={data.slice()} // ref to datastructure above
                         //defaultValue={selected} // Uncontrolled State
                         value={value} // Controlled State - Selected values [{},{}] for multi or {} for single

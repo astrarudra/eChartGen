@@ -33,6 +33,7 @@ var getSeries = (array, property, property2, type, labels) => {
             })
         }
     }
+    console.log(data,"data in getSeriesgetSeries");
     return data
 }
 
@@ -51,8 +52,14 @@ export default class WrapChart extends Component {
     }
     
     applyChartSettings = (state) => {
-        state.popup = false;
-        this.setState(state)
+         state.popup = false;
+         this.setState(state)
+      //  var {popup}=this.state
+      //  this.setState({popup:false})
+    }
+     
+    cancelChartSettings = () => {
+        this.setState({popup:false})
     }
 
     getChartOptions = (settings, labels, series, selected) => {
@@ -61,9 +68,9 @@ export default class WrapChart extends Component {
         var type = settings.type.value
         var legend = {},
             title = {
-               text: settings.title,
-               subtext: settings.subtitle,
-               left: settings.position ? settings.position.value : 'left'
+            //    text: settings.title,
+            //    subtext: settings.subtitle,
+            //    left: settings.position ? settings.position.value : 'left'
             },
             tooltip = {
                 trigger: 'item',
@@ -140,7 +147,9 @@ export default class WrapChart extends Component {
         var selected = buttons[buttons.length - 1].selected
 
         var type = settings.type.value
+        console.log(type, "type in function" );
         var metrics = tableConfig.filter(config => config.type === "Metric")
+        console.log(metrics,"metricsmetricsmetricsmetrics");
         var series = []
         var labels = getSeries(dispTableData, selected.value)
         var count = 1;
@@ -164,19 +173,35 @@ export default class WrapChart extends Component {
 
         return this.getChartOptions(settings, labels, series, selected);
     }
+    // getChartTitle = () =>{
+    //     this.setState({showTitleDiv:true})
+    // }
+    // getTitlePosition = (value) =>{
+    //     this.setState({position:value})
+    // }
 
 
     render() {
         console.log("STATE = ", this.state)
         var { tableData, tableConfig, filterState, negFilterState, eyeFilter, 
-            buttons, lists, popup, settings} = this.state
+            buttons, lists, popup, settings, chartTitleParams, showTitleDiv, position} = this.state
             
         var { dispTableData = [] , dispTableConfig } = genData(tableData , tableConfig , buttons , filterState , negFilterState, genEyeFilter(lists) , lists)
 
         console.log("dispTableData", dispTableData)
         var chartOption = this.genChartData(dispTableData, dispTableConfig)
+
+        var showdiv = settings.title || settings.subtitle 
+        var position = settings.position === undefined ? "-webkit-center" : settings.position.value
+        var isTitle = settings.isTitle === undefined ? true : settings.isTitle
         return (
             <div className="wrap-table p-t-10">
+             {showdiv && isTitle ? <div style={{ height:"8vh", fontWeight:"bold"}}>
+                 <div style={{width:"100%", textAlign:position}}>
+                {settings.title ? <div style={{fontSize:"20px", color:"red", width:"20%", height:"4vh", backgroundColor:"none", textAlign:"center" }}>{settings.title}</div>:null}
+                {settings.subtitle ? <div style={{width:"20%", height:"4vh", textAlign:"center", backgroundColor:"none" }}>{settings.subtitle}</div>:null}
+                </div>
+            </div>: null }
                 {buttons ? buttons.map((buttonList, index) => {
                     return (
                         <ButtonGroup 
@@ -191,7 +216,7 @@ export default class WrapChart extends Component {
 
                 
                 <Modal isOpen={popup} toggle={() => this.setState({popup: !popup})} centered backdrop={true} size='lg'>
-                    <ChartSettingsModal chartSettings={this.chartSettings} applySettings={this.applyChartSettings} chart={this.state}/>
+                    <ChartSettingsModal chartSettings={this.chartSettings} getTitlePosition={this.getTitlePosition} toggle={() => this.setState({popup: !popup})} getChartTitle={this.getChartTitle} applySettings={this.applyChartSettings} chart={this.state}/>
                 </Modal>
             </div>
         )

@@ -7,8 +7,9 @@ export const initilize = () => {
     var initList = listToLV(lists.columnList)
     return {
         fields: FIELDS,
+        position:"-webkit-center",
         popup: false,
-        settings: {type: CHART_CUSTOM_LIST[0]},
+        settings: {type: CHART_CUSTOM_LIST[0], isTitle:true},
         tableData: DATA,
         lists: lists,
         tableConfig: tableConfig,
@@ -49,9 +50,9 @@ export const CHART_CUSTOM_LIST = [
     { value: SCATTER, label: 'Scatter' }, // 3
 ]
 export const POS_LIST = [
-    { value: 'left', label: 'Left' }, // 0
-    { value: 'center', label: 'Center' }, // 1
-    { value: 'right', label: 'Right' }, // 2
+                        {label:"Left", value:"-webkit-left" },
+                        {label:"Center", value:"-webkit-center" },
+                        {label:"Right", value:"-webkit-right" } // 2
 ]
 
 const getLists = (fields) => {
@@ -95,8 +96,12 @@ export const genEyeFilter = (lists) => {
 
 const flattenChildren = (treeData) => {
     var list = []
+    console.log(treeData, "tree data in flattenCHildren");
     treeData.forEach(o => {
-        if(o.isGroup) list = [...list, ...flattenChildren(o.children)]
+        if(o.isGroup){
+         list = [...list, ...flattenChildren(o.children)]
+        console.log(list,"List in list flattenChildren");
+        }
         else list.push(o)
      })
      return list
