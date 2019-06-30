@@ -33,7 +33,7 @@ var getSeries = (array, property, property2, type, labels) => {
             })
         }
     }
-    console.log(data,"data in getSeriesgetSeries");
+  //  console.log(data,"data in getSeriesgetSeries");
     return data
 }
 
@@ -114,7 +114,7 @@ export default class WrapChart extends Component {
         else tooltip.formatter = "{a} <br/>{b} : {c} ({d}%)"
         options.tooltip = tooltip
         options.series = series
-        console.log(options, "CHART OPTIONS")
+       // console.log(options, "CHART OPTIONS")
         return options
     }
 
@@ -147,9 +147,9 @@ export default class WrapChart extends Component {
         var selected = buttons[buttons.length - 1].selected
 
         var type = settings.type.value
-        console.log(type, "type in function" );
+      //  console.log(type, "type in function" );
         var metrics = tableConfig.filter(config => config.type === "Metric")
-        console.log(metrics,"metricsmetricsmetricsmetrics");
+      //  console.log(metrics,"metricsmetricsmetricsmetrics");
         var series = []
         var labels = getSeries(dispTableData, selected.value)
         var count = 1;
@@ -188,18 +188,24 @@ export default class WrapChart extends Component {
             
         var { dispTableData = [] , dispTableConfig } = genData(tableData , tableConfig , buttons , filterState , negFilterState, genEyeFilter(lists) , lists)
 
-        console.log("dispTableData", dispTableData)
+      //  console.log("dispTableData", dispTableData)
         var chartOption = this.genChartData(dispTableData, dispTableConfig)
 
         var showdiv = settings.title || settings.subtitle 
-        var position = settings.position === undefined ? "-webkit-center" : settings.position.value
-        var isTitle = settings.isTitle === undefined ? true : settings.isTitle
+        var position = !settings.position ? "-webkit-center" : settings.position.value
+        var isMainTitle = !settings.isMainTitle ? true : settings.isMainTitle
+        var isTitle = !settings.isTitle ? true : settings.isTitle
+        var isSubTitle = !settings.isSubTitle ? true : settings.isSubTitle
+        var titleFont = !settings.fontTitle ? "20px" : settings.fontTitle + "px"
+        var subTitleFont = !settings.fontSubtitle ? "15px" : settings.fontSubtitle + "px"
+        var backgroundColor = !settings.backGroundColor ? "none" : settings.backGroundColor.value
+        console.log(backgroundColor,"backgroundColorbackgroundColor");
         return (
             <div className="wrap-table p-t-10">
-             {showdiv && isTitle ? <div style={{ height:"8vh"}}>
-                 <div style={{width:"100%", textAlign:position}}>
-                {settings.title ? <div style={{fontSize:"20px", color:"#5B5B5B", width:"20%", height:"4vh", backgroundColor:"lightgrey", textAlign:"center", fontWeight:"bold" }}>{settings.title}</div>:null}
-                {settings.subtitle ? <div style={{width:"20%", color:"#5B5B5B",  height:"4vh", textAlign:"center", backgroundColor:"lightgrey" }}>{settings.subtitle}</div>:null}
+             {showdiv && isMainTitle ? <div style={{ }}>
+                 <div style={{width:"100%",backgroundColor:backgroundColor, textAlign:position}}>
+                {settings.title && isTitle ? <div style={{fontSize:titleFont, color:"#5B5B5B", width:"20%", height:"4vh",  textAlign:"center", fontWeight:"bold" }}>{settings.title}</div>:null}
+                {settings.subtitle && isSubTitle ? <div style={{fontSize:subTitleFont, width:"20%", color:"#5B5B5B",  height:"4vh", textAlign:"center" }}>{settings.subtitle}</div>:null}
                 </div>
             </div>: null }
                 {buttons ? buttons.map((buttonList, index) => {
