@@ -10,6 +10,7 @@ export const initilize = () => {
         position:"-webkit-center",
         popup: false,
         route:"title",
+        route1:"chartType",
         settings: {type: CHART_CUSTOM_LIST[0]},
         tableData: DATA,
         lists: lists,
@@ -55,6 +56,12 @@ export const POS_LIST = [
                         {label:"Center", value:"-webkit-center" },
                         {label:"Right", value:"-webkit-right" } // 2
 ]
+export const THEMES = [{label:"None", backGroundColor:"#FFFFFF", color:"#000000", chartBackGround:"#FFFFFF", value:"#000000"},
+                       {label:"Theme1", backGroundColor:"rgb(198, 246, 198)", color:"#696969", chartBackGround:"rgb(198, 246, 198)", value:"#696969"},
+                       {label:"Theme2", backGroundColor:"#696969", color:"#ffffff", chartBackGround:"#808080", value:"j#ffffff"},
+                       {label:"Theme3", backGroundColor:"#228B22", color:"#D3D3D3", chartBackGround:"#808080", value:"#D3D3D3"},
+                       {label:"Theme4", backGroundColor:"#FFFF33", color:"#a9baad", chartBackGround:"#808080", value:"#a9baad"}
+                      ]
 
 const getLists = (fields) => {
     var attributeList = _.filter(fields, 'isSelected')
