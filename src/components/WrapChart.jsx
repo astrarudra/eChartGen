@@ -62,11 +62,13 @@ export default class WrapChart extends Component {
         this.setState({popup:false})
     }
 
-    getChartOptions = (settings, labels, series, selected) => {
+    getChartOptions = (settings, labels, series, selected, gridX, gridY, gridXa, gridYa,isXaxis, isYaxis, isLegend, backgroundColor) => {
         var options = {}
         console.log(settings, "CHART settings")
         var type = settings.type.value
-        var legend = {},
+        var legend = {
+            show:isLegend,
+        },
             title = {
             //    text: settings.title,
             //    subtext: settings.subtitle,
@@ -93,15 +95,41 @@ export default class WrapChart extends Component {
                     end: 100
                 }
             ],
+            backgroundColor=backgroundColor,
             yAxis = [{
                 type: 'value',
+                show: isYaxis,
+                showGrid: false,
+                splitLine: {
+                    show: gridY,
+                 },
+                 splitArea:{
+                    show: gridYa,
+                }
             },{
                 type: 'value',
-            },],
+                show:isYaxis,
+                showGrid: false,
+                splitLine: {
+                    show: gridY
+                 },
+                 splitArea:{
+                    show: gridYa,
+                }
+            }
+        ],
             xAxis = {
                 type: 'category',
                 data: labels,
                 name: selected.label,
+                show:isXaxis,
+                showGrid:true,
+                splitLine: {
+                    show: gridX,
+                 },
+                 splitArea:{
+                     show: gridXa,
+                 }
             }
 
         options.title = title
@@ -110,10 +138,12 @@ export default class WrapChart extends Component {
             options.dataZoom = dataZoom
             options.yAxis = yAxis
             options.xAxis = xAxis
+            options.backgroundColor = backgroundColor
         }
         else tooltip.formatter = "{a} <br/>{b} : {c} ({d}%)"
         options.tooltip = tooltip
         options.series = series
+        options.backgroundColor = backgroundColor
        // console.log(options, "CHART OPTIONS")
         return options
     }
@@ -142,7 +172,7 @@ export default class WrapChart extends Component {
         return _obj
     }
 
-    genChartData = (dispTableData) => {
+    genChartData = (dispTableData, dispTableConfig, gridX, gridY, gridXa, gridYa,isXaxis, isYaxis, isLegend, backgroundColor) => {
         var { buttons , tableConfig , settings } = this.state
         var selected = buttons[buttons.length - 1].selected
 
@@ -171,43 +201,72 @@ export default class WrapChart extends Component {
             )
         })
 
-        return this.getChartOptions(settings, labels, series, selected);
+        return this.getChartOptions(settings, labels, series, selected, gridX, gridY, gridXa, gridYa,isXaxis, isYaxis, isLegend, backgroundColor);
     }
-    // getChartTitle = () =>{
-    //     this.setState({showTitleDiv:true})
-    // }
-    // getTitlePosition = (value) =>{
-    //     this.setState({position:value})
-    // }
-
-
     render() {
         console.log("STATE = ", this.state)
         var { tableData, tableConfig, filterState, negFilterState, eyeFilter, 
             buttons, lists, popup, settings, chartTitleParams, showTitleDiv, position} = this.state
-            
+        var backgroundColor=!settings.theme?"white":settings.theme.chartBackGround
+        var gridX = !settings.isXGrid ? false : settings.isXGrid
+        var gridY = !settings.isYGrid ? false : settings.isYGrid   
+        var gridXa = !settings.isXGrida ? false : settings.isXGrida
+        var gridYa = !settings.isYGrida ? false : settings.isYGrida 
+        var isXaxis = settings.isXaxis === undefined ? true : settings.isXaxis
+        var isYaxis = settings.isYaxis === undefined ? true : settings.isYaxis
+        var isLegend = settings.isLegend===undefined ? true : settings.isLegend
+          
         var { dispTableData = [] , dispTableConfig } = genData(tableData , tableConfig , buttons , filterState , negFilterState, genEyeFilter(lists) , lists)
+        var chartOption = this.genChartData(dispTableData, dispTableConfig, gridX, gridY, gridXa, gridYa, isXaxis, isYaxis, isLegend, backgroundColor)
+     //   chartOption["backgroundColor"]=!settings.theme?"white":settings.theme.chartBackGround
+        // chartOption["axis"] = { show:true,
+        //                         boundaryGap: [0,0]}
+        //  
+        //  }
+                                // width:"10px",
+                                // height:"20px",
+                                // color:'green',
+                                // borderWidth:10,
+                                // borderColor:'black'}
 
-      //  console.log("dispTableData", dispTableData)
-        var chartOption = this.genChartData(dispTableData, dispTableConfig)
+                                // chartOption["toolbox"] = {
+                                //     show : true,
+                                //     feature : {
+                                //         mark : {show: true},
+                                //         dataView : {show: true, readOnly: false},
+                                //         magicType : {show: true, type: ['line', 'bar']},
+                                //         restore : {show: true},
+                                //         saveAsImage : {show: true}
+                                //     }
+                                // }
 
         var showdiv = settings.title || settings.subtitle 
-        var position = !settings.position ? "-webkit-center" : settings.position.value
-        var isMainTitle = !settings.isMainTitle ? true : settings.isMainTitle
-        var isTitle = !settings.isTitle ? true : settings.isTitle
-        var isSubTitle = !settings.isSubTitle ? true : settings.isSubTitle
-        var titleFont = !settings.fontTitle ? "20px" : settings.fontTitle + "px"
-        var subTitleFont = !settings.fontSubtitle ? "15px" : settings.fontSubtitle + "px"
-        var backgroundColor = !settings.backGroundColor ? "none" : settings.backGroundColor.value
-        console.log(backgroundColor,"backgroundColorbackgroundColor");
+        var position = settings.position===undefined ? "-webkit-center" : settings.position.value
+        var isMainTitle = settings.isMainTitle===undefined ? true : settings.isMainTitle
+        var isTitle = settings.isTitle===undefined ? true : settings.isTitle
+        var isSubTitle = settings.isSubTitle===undefined ? true : settings.isSubTitle
+        var titleFont = settings.fontTitle===undefined ? "20px" : settings.fontTitle + "px"
+        var subTitleFont = settings.fontSubtitle===undefined ? "15px" : settings.fontSubtitle + "px"
+        var backgroundColor = settings.theme===undefined ? "none" : settings.theme.backGroundColor
+        var color = settings.theme===undefined ? "black" : settings.theme.color
+       
+      //  console.log(backgroundColor,"backgroundColorbackgroundColor");
         return (
-            <div className="wrap-table p-t-10">
-             {showdiv && isMainTitle ? <div style={{ }}>
-                 <div style={{width:"100%",backgroundColor:backgroundColor, textAlign:position}}>
-                {settings.title && isTitle ? <div style={{fontSize:titleFont, color:"#5B5B5B", width:"20%", height:"4vh",  textAlign:"center", fontWeight:"bold" }}>{settings.title}</div>:null}
-                {settings.subtitle && isSubTitle ? <div style={{fontSize:subTitleFont, width:"20%", color:"#5B5B5B",  height:"4vh", textAlign:"center" }}>{settings.subtitle}</div>:null}
+            <div className="wrap-table p-t-10" style={{padding:"30px", backgroundColor:backgroundColor, borderRadius:"5px", border:"1px solid grey", width:"95%", marginLeft:"2.5%", marginTop:"1vh", padding:"3px"}}>
+            {/* <div style={{height:"2vh"}}></div> */}
+            <div style={{}}>
+                {showdiv && isMainTitle ? <div style={{ }}>
+                 <div style={{width:"100%",backgroundColor:backgroundColor, textAlign:position }}>
+                     <div style={{ color:color, width:"20%",  textAlign:"center", border:"1px solid darkgrey"}}>
+                {settings.title && isTitle ? <div style={{fontSize:titleFont, fontWeight:"bold" }}>{settings.title}</div>:null}
+                {settings.subtitle && isSubTitle ? <div style={{fontSize:subTitleFont }}>{settings.subtitle}</div>:null}
+                </div>
                 </div>
             </div>: null }
+                 {/* <div style={{height:"2vh"}}></div> */}
+              
+               </div>
+               <div style={{backgroundColor:backgroundColor}}>
                 {buttons ? buttons.map((buttonList, index) => {
                     return (
                         <ButtonGroup 
@@ -217,8 +276,11 @@ export default class WrapChart extends Component {
                         />
                 )}): null
                 }
-                <EchartGen option={chartOption} />
+                </div>
+                 <div style={{borderRadius:"50px", zIndex:2}}> <EchartGen option={chartOption} /> </div>
+                
                 <div className="btn btn-primary" onClick={() => this.setState({popup: true})}>Settings</div>
+                
 
                 
                 <Modal isOpen={popup} toggle={() => this.setState({popup: !popup})} centered backdrop={true} size='lg'>
