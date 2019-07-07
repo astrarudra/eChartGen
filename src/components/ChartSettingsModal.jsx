@@ -60,6 +60,14 @@ export default class FieldSettingsModal extends Component {
         this.changeSettings(t, pt);
         this.changeSettings(st, pst);
     }
+    changeGridSettings = (m, pm, t, pt, st, pst, gX, oXg, gY, oYg ) => {
+        this.changeSettings(m, pm);
+        this.changeSettings(t, pt);
+        this.changeSettings(st, pst);
+        this.changeSettings(gX, oXg);
+        this.changeSettings(gY, oYg);
+    }
+    
 
 
     render() {
@@ -80,14 +88,17 @@ export default class FieldSettingsModal extends Component {
                 AGG_LIST.push(o)
             })
         })
+        ///////////Title Page Chart Popup ///////
         var TitlePage = <div>
             <div className="d-flex"> <Checkbox title="" styleName="default"
                 onChange={() => this.changeMainSettings(!isMainTitle, "isMainTitle", !isMainTitle, "isTitle", !isMainTitle, "isSubTitle")}
                 isChecked={isMainTitle} />Chart Title</div>
-            <div style={{ pointerEvents: !isMainTitle ? "none" : null }}><div className="m-t-10">
+            <div style={{ display: !isMainTitle ? "none" : "block" }}><div className="m-t-10">
                 <div className="d-flex">
-                    <div style={{ width: '45%' }}>Title </div>
-                    <div style={{ width: '5%' }}><Checkbox title="" styleName="default" onChange={() => this.changeSettings(!isTitle, "isTitle")} isChecked={isTitle} /></div>
+                    <div style={{width:"10%"}}></div>
+                    <div style={{ width: '3%' }}><Checkbox title="" styleName="default" onChange={() => this.changeSettings(!isTitle, "isTitle")} isChecked={isTitle} /></div>
+                    <div style={{ width: '18%' }}>Title </div>
+                   
                     <input
                         value={title}
                         onChange={(e) => this.changeSettings(e.target.value, "title")}>
@@ -96,7 +107,8 @@ export default class FieldSettingsModal extends Component {
             </div>
                 <div className="m-t-10">
                     <div className="d-flex">
-                        <div style={{ width: '50%' }}>Title Font Size</div>
+                    <div style={{width:"13%"}}></div>
+                        <div style={{ width: '18%' }}>Title Font Size</div>
                         <input
                             type='number'
                             value={fontTitle}
@@ -106,8 +118,10 @@ export default class FieldSettingsModal extends Component {
                 </div>
                 <div className="m-t-10">
                     <div className="d-flex">
-                        <div style={{ width: '45%' }}>Sub Title</div>
-                        <div style={{ width: '5%' }}><Checkbox title="" styleName="default" onChange={() => this.changeSettings(!isSubTitle, "isSubTitle")} isChecked={isSubTitle} /></div>
+                    <div style={{width:"10%"}}></div>
+                    <div style={{ width: '3%' }}><Checkbox title="" styleName="default" onChange={() => this.changeSettings(!isSubTitle, "isSubTitle")} isChecked={isSubTitle} /></div>
+                        <div style={{ width: '18%' }}>Sub Title</div>
+                       
                         <input
                             value={subtitle}
                             onChange={(e) => this.changeSettings(e.target.value, "subtitle")}>
@@ -116,7 +130,8 @@ export default class FieldSettingsModal extends Component {
                 </div>
                 <div className="m-t-10">
                     <div className="d-flex">
-                        <div style={{ width: '50%' }}>Sub Title Font Size</div>
+                    <div style={{width:"13%"}}></div>
+                        <div style={{ width: '18%' }}>Sub Title Font Size</div>
                         <input
                             type='number'
                             value={fontSubtitle}
@@ -127,12 +142,15 @@ export default class FieldSettingsModal extends Component {
 
                 <div className="m-t-10">
                     <div className="d-flex">
-                        <div style={{ width: '50%' }}>Position</div>
+                    <div style={{width:"13%"}}></div>
+                        <div style={{ width: '18%' }}>Position</div>
                         <div style={{ width: '50%', zIndex: 15 }}><SelectDD data={POS_LIST} onChange={(o) => this.changeSettings(o, "position")} selected={position} /></div>
                     </div>
                 </div>
             </div>
         </div>
+
+        ///////////////////////////
 
         var chartType = <div>
             <div style={{height:"1vh"}}></div>
@@ -176,7 +194,7 @@ export default class FieldSettingsModal extends Component {
                     <div className="d-flex"> <Checkbox title="" styleName="default"
                         onChange={() => this.changeMainSettings(!isMainAxis, "isMainAxis", !isMainAxis, "isXaxis", !isMainAxis, "isYaxis")}
                         isChecked={isMainAxis} />Axis Lines</div>
-                    <div style={{ pointerEvents: !isMainAxis ? "none" : null }}>
+                    <div style={{ display: !isMainAxis ? "none" : "block" }}>
                         <div className="m-t-10">
                             <div className="d-flex">
                                 <div style={{width:"15%"}}></div>
@@ -191,19 +209,20 @@ export default class FieldSettingsModal extends Component {
                                 <div style={{ width: '30%' }}>Y-axis </div>
                             </div>
                         </div>
+                        </div>
                         <div className="d-flex"> <Checkbox title="" styleName="default"
                         onChange={() => this.changeSettings(!isLegend, "isLegend")}
                         isChecked={isLegend} />Legends</div>
-                    </div>
+                    
                 </div>
 
 
                 {/* // Cartesian grid line and area option default only lines are checked*/}
                 <div style={{width:"50%"}}>
                     <div className="d-flex"> <Checkbox title="" styleName="default"
-                        onChange={() => this.changeMainSettings(!isMainCartesian, "isMainCartesian", !isMainCartesian, "isXGrid", !isMainCartesian, "isYGrid")}
+                        onChange={() => this.changeGridSettings(!isMainCartesian, "isMainCartesian", !isMainCartesian, "isXGrid", !isMainCartesian, "isYGrid", !isMainCartesian, "isXGrida", !isMainCartesian, "isYGrida")}
                         isChecked={isMainCartesian} />Cartesian Grid</div>
-                    <div style={{ pointerEvents: !isMainCartesian ? "none" : null }}>
+                    <div style={{ display: !isMainCartesian ? "none" : "block" }}>
                         <div className="m-t-10">
                             <div className="d-flex">
                             <div style={{width:"15%"}}></div>
