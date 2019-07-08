@@ -55,29 +55,33 @@ export default class FieldSettingsModal extends Component {
     setPage = (o, page) => {
         this.setState({ [o]: page })
     }
-    changeMainSettings = (m, pm, t, pt, st, pst) => {
-        this.changeSettings(m, pm);
-        this.changeSettings(t, pt);
-        this.changeSettings(st, pst);
+    changeMainSettings = (main, propertyMain, propertyParam1, propertyParam2) => {
+        var { settings } = this.state
+        settings[propertyMain] = main
+        settings[propertyParam1] = main
+        settings[propertyParam2] = main
+        this.setState({ settings });
     }
-    changeGridSettings = (m, pm, t, pt, st, pst, gX, oXg, gY, oYg ) => {
-        this.changeSettings(m, pm);
-        this.changeSettings(t, pt);
-        this.changeSettings(st, pst);
-        this.changeSettings(gX, oXg);
-        this.changeSettings(gY, oYg);
+    changeGridSettings = (mainGrid, propertyMainGrid, propertyXGrid, propertyYGrid, propertyGridXa, propertyGridYa) => {
+        var { settings } = this.state
+        settings[propertyMainGrid] = mainGrid
+        settings[propertyXGrid] = mainGrid
+        settings[propertyYGrid] = mainGrid
+        settings[propertyGridXa] = mainGrid
+        settings[propertyGridYa] = mainGrid
+        this.setState({ settings });
     }
-    
+
 
 
     render() {
-        console.log(THEMES, "Check Themes");
+        //   console.log(THEMES, "Check Themes");
         var { chartSettings, toggle } = this.props;
         var { settings, fields, route, route1 } = this.state
         var { type, position, title, subtitle, isXGrid = false, isYGrid = false, isXGrida = false, isYGrida = false,
             isMainCartesian = isXGrid || isYGrid, isXaxis = true, isYaxis = true, isMainAxis = isXaxis || isYaxis,
             theme = { label: "None", backGroundColor: "#FFFFFF", color: "#000000", chartBackGround: "#808080", value: "#000000" },
-            isSubTitle = true, isTitle = true, isMainTitle = isSubTitle || isTitle, fontTitle, fontSubtitle, isLegend=true } = settings
+            isSubTitle = true, isTitle = true, isMainTitle = isSubTitle || isTitle, fontTitle, fontSubtitle, isLegend = true, isSmooth } = settings
         var AGG_LIST = []
         var metricList = _.filter(fields, o => o.ddField === METRIC)
         metricList.forEach(metric => {
@@ -88,17 +92,18 @@ export default class FieldSettingsModal extends Component {
                 AGG_LIST.push(o)
             })
         })
+        console.log(settings, "settingssettingssettingssettingssettingssettingssettings");
         ///////////Title Page Chart Popup ///////
         var TitlePage = <div>
             <div className="d-flex"> <Checkbox title="" styleName="default"
-                onChange={() => this.changeMainSettings(!isMainTitle, "isMainTitle", !isMainTitle, "isTitle", !isMainTitle, "isSubTitle")}
+                onChange={() => this.changeMainSettings(!isMainTitle, "isMainTitle", "isTitle", "isSubTitle")}
                 isChecked={isMainTitle} />Chart Title</div>
             <div style={{ display: !isMainTitle ? "none" : "block" }}><div className="m-t-10">
                 <div className="d-flex">
-                    <div style={{width:"10%"}}></div>
+                    <div style={{ width: "10%" }}></div>
                     <div style={{ width: '3%' }}><Checkbox title="" styleName="default" onChange={() => this.changeSettings(!isTitle, "isTitle")} isChecked={isTitle} /></div>
                     <div style={{ width: '18%' }}>Title </div>
-                   
+
                     <input
                         value={title}
                         onChange={(e) => this.changeSettings(e.target.value, "title")}>
@@ -107,7 +112,7 @@ export default class FieldSettingsModal extends Component {
             </div>
                 <div className="m-t-10">
                     <div className="d-flex">
-                    <div style={{width:"13%"}}></div>
+                        <div style={{ width: "13%" }}></div>
                         <div style={{ width: '18%' }}>Title Font Size</div>
                         <input
                             type='number'
@@ -118,10 +123,10 @@ export default class FieldSettingsModal extends Component {
                 </div>
                 <div className="m-t-10">
                     <div className="d-flex">
-                    <div style={{width:"10%"}}></div>
-                    <div style={{ width: '3%' }}><Checkbox title="" styleName="default" onChange={() => this.changeSettings(!isSubTitle, "isSubTitle")} isChecked={isSubTitle} /></div>
+                        <div style={{ width: "10%" }}></div>
+                        <div style={{ width: '3%' }}><Checkbox title="" styleName="default" onChange={() => this.changeSettings(!isSubTitle, "isSubTitle")} isChecked={isSubTitle} /></div>
                         <div style={{ width: '18%' }}>Sub Title</div>
-                       
+
                         <input
                             value={subtitle}
                             onChange={(e) => this.changeSettings(e.target.value, "subtitle")}>
@@ -130,7 +135,7 @@ export default class FieldSettingsModal extends Component {
                 </div>
                 <div className="m-t-10">
                     <div className="d-flex">
-                    <div style={{width:"13%"}}></div>
+                        <div style={{ width: "13%" }}></div>
                         <div style={{ width: '18%' }}>Sub Title Font Size</div>
                         <input
                             type='number'
@@ -142,7 +147,7 @@ export default class FieldSettingsModal extends Component {
 
                 <div className="m-t-10">
                     <div className="d-flex">
-                    <div style={{width:"13%"}}></div>
+                        <div style={{ width: "13%" }}></div>
                         <div style={{ width: '18%' }}>Position</div>
                         <div style={{ width: '50%', zIndex: 15 }}><SelectDD data={POS_LIST} onChange={(o) => this.changeSettings(o, "position")} selected={position} /></div>
                     </div>
@@ -150,10 +155,10 @@ export default class FieldSettingsModal extends Component {
             </div>
         </div>
 
-        ///////////////////////////
+        ///////////////////////////Chart properties-->Chart Type////////////////////////
 
         var chartType = <div>
-            <div style={{height:"1vh"}}></div>
+            <div style={{ height: "1vh" }}></div>
             <div className="m-t-10">
                 <div className="d-flex">
                     <div style={{ width: '50%' }}>Chart Type</div>
@@ -164,20 +169,27 @@ export default class FieldSettingsModal extends Component {
             </div>
 
             {type.value !== "pie" ? <div>
-            <div style={{height:"2vh"}}></div>
+                <div style={{ height: "2vh" }}></div>
+                <div style={{ display: type.value !== "pie" && type.value !== "bar" && type.value !== "scatter" ? "block" : "none" }}>
+                    <div className="d-flex"> <Checkbox title="" styleName="default"
+                        onChange={() => this.changeSettings(!isSmooth, "isSmooth")}
+                        isChecked={isSmooth} />Smooth</div>
+                </div>
                 <div className="m-t-10">
                     <div className="d-flex">
                         <div style={{ width: '40%' }}>Series Name</div>
-                        <div style={{width:"10%"}}></div>
+                        <div style={{ width: "10%" }}></div>
                         <div style={{ width: '20%' }}>2nd Axis</div>
                         {type.value === 'custom' ? <div style={{ width: '40%' }}>Chart Type</div> : null}
                     </div>
                 </div>
                 <div>
+
+
                     {AGG_LIST.map((o, i) => {
                         return (
                             <div className="d-flex">
-                                <div style={{width:"10%"}}></div>
+                                <div style={{ width: "10%" }}></div>
                                 <div style={{ width: '40%' }}>{o.label}</div>
                                 <div style={{ width: '20%', zIndex: 10 - i }}><Checkbox title="" styleName="default" onChange={() => this.axisSettings(!o.yAxis, o)} isChecked={o.yAxis} /></div>
                                 {type.value === 'custom' ? <div style={{ width: '40%', zIndex: 10 - i }}><SelectDD data={CHART_CUSTOM_LIST} onChange={(selected) => this.customSettings(selected, o)} selected={o.selected} isClearable={false} /></div> : null}
@@ -187,83 +199,104 @@ export default class FieldSettingsModal extends Component {
                 </div>
             </div> : null}
         </div>
+
+        //////////////////////////Chart properties--> Grid Tab  ////////////////////////
+        var axisLines = <div style={{ width: "50%" }}>
+            <div className="d-flex"> <Checkbox title="" styleName="default"
+                onChange={() => this.changeMainSettings(!isMainAxis, "isMainAxis", "isXaxis", "isYaxis")}
+                isChecked={isMainAxis} />Axis Lines</div>
+            <div style={{ display: !isMainAxis ? "none" : "block" }}>
+                <div className="m-t-10">
+                    <div className="d-flex">
+                        <div style={{ width: "15%" }}></div>
+                        <div style={{ width: '5%' }}><Checkbox title="" styleName="default" onChange={() => this.changeSettings(!isXaxis, "isXaxis")} isChecked={isXaxis} /></div>
+                        <div style={{ width: '30%' }}>X-axis </div>
+                    </div>
+                </div>
+                <div className="m-t-10">
+                    <div className="d-flex">
+                        <div style={{ width: "15%" }}></div>
+                        <div style={{ width: '5%' }}><Checkbox title="" styleName="default" onChange={() => this.changeSettings(!isYaxis, "isYaxis")} isChecked={isYaxis} /></div>
+                        <div style={{ width: '30%' }}>Y-axis </div>
+                    </div>
+                </div>
+            </div>
+            {/* <div className="d-flex"> <Checkbox title="" styleName="default"
+            onChange={() => this.changeSettings(!isLegend, "isLegend")}
+            isChecked={isLegend} />Legends</div> */}
+
+        </div>
         var grids =
-            // Axis line option default axis lines are true
+            //////// Axis line option default axis lines are true
             <div className="d-flex">
-                <div style={{width:"50%"}}>
-                    <div className="d-flex"> <Checkbox title="" styleName="default"
-                        onChange={() => this.changeMainSettings(!isMainAxis, "isMainAxis", !isMainAxis, "isXaxis", !isMainAxis, "isYaxis")}
-                        isChecked={isMainAxis} />Axis Lines</div>
-                    <div style={{ display: !isMainAxis ? "none" : "block" }}>
-                        <div className="m-t-10">
-                            <div className="d-flex">
-                                <div style={{width:"15%"}}></div>
-                                <div style={{ width: '5%' }}><Checkbox title="" styleName="default" onChange={() => this.changeSettings(!isXaxis, "isXaxis")} isChecked={isXaxis} /></div>
-                                <div style={{ width: '30%' }}>X-axis </div>
-                            </div>
-                        </div>
-                        <div className="m-t-10">
-                            <div className="d-flex">
-                            <div style={{width:"15%"}}></div>
-                                <div style={{ width: '5%' }}><Checkbox title="" styleName="default" onChange={() => this.changeSettings(!isYaxis, "isYaxis")} isChecked={isYaxis} /></div>
-                                <div style={{ width: '30%' }}>Y-axis </div>
-                            </div>
-                        </div>
-                        </div>
+                <div style={{ width: "50%" }}>
+                    {/* <div className="d-flex"> <Checkbox title="" styleName="default"
+                        onChange={() => this.changeMainSettings(!isMainAxis, "isMainAxis", "isXaxis", "isYaxis")}
+                        isChecked={isMainAxis} />Axis Lines</div> */}
+                    <div style={{ width: "100%" }}>
                         <div className="d-flex"> <Checkbox title="" styleName="default"
+                            onChange={() => this.changeGridSettings(!isMainCartesian, "isMainCartesian", "isXGrid", "isYGrid", "isXGrida", "isYGrida")}
+                            isChecked={isMainCartesian} />Cartesian Grid</div>
+                        <div style={{ display: !isMainCartesian ? "none" : "block" }}>
+                            <div className="m-t-10">
+                                <div className="d-flex">
+                                    <div style={{ width: "15%" }}></div>
+                                    <div style={{ width: '5%' }}><Checkbox title="" styleName="default" onChange={() => this.changeSettings(!isXGrid, "isXGrid")} isChecked={isXGrid} /></div>
+                                    <div style={{ width: '30%' }}>X-axis grid lines</div>
+                                </div>
+                            </div>
+                            <div className="m-t-10">
+                                <div className="d-flex">
+                                    <div style={{ width: "15%" }}></div>
+                                    <div style={{ width: '5%' }}><Checkbox title="" styleName="default" onChange={() => this.changeSettings(!isXGrida, "isXGrida")} isChecked={isXGrida} /></div>
+                                    <div style={{ width: '30%' }}>X-axis grid area</div>
+                                </div>
+                            </div>
+                            <div className="m-t-10">
+                                <div className="d-flex">
+                                    <div style={{ width: "15%" }}></div>
+                                    <div style={{ width: '5%' }}><Checkbox title="" styleName="default" onChange={() => this.changeSettings(!isYGrid, "isYGrid")} isChecked={isYGrid} /></div>
+                                    <div style={{ width: '30%' }}>Y-axis grid lines</div>
+                                </div>
+                            </div>
+                            <div className="m-t-10">
+                                <div className="d-flex">
+                                    <div style={{ width: "15%" }}></div>
+                                    <div style={{ width: '5%' }}><Checkbox title="" styleName="default" onChange={() => this.changeSettings(!isYGrida, "isYGrida")} isChecked={isYGrida} /></div>
+                                    <div style={{ width: '30%' }}>Y-axis grid area</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="d-flex"> <Checkbox title="" styleName="default"
                         onChange={() => this.changeSettings(!isLegend, "isLegend")}
                         isChecked={isLegend} />Legends</div>
-                    
+
+
                 </div>
 
 
                 {/* // Cartesian grid line and area option default only lines are checked*/}
-                <div style={{width:"50%"}}>
-                    <div className="d-flex"> <Checkbox title="" styleName="default"
-                        onChange={() => this.changeGridSettings(!isMainCartesian, "isMainCartesian", !isMainCartesian, "isXGrid", !isMainCartesian, "isYGrid", !isMainCartesian, "isXGrida", !isMainCartesian, "isYGrida")}
-                        isChecked={isMainCartesian} />Cartesian Grid</div>
-                    <div style={{ display: !isMainCartesian ? "none" : "block" }}>
-                        <div className="m-t-10">
-                            <div className="d-flex">
-                            <div style={{width:"15%"}}></div>
-                                <div style={{ width: '5%' }}><Checkbox title="" styleName="default" onChange={() => this.changeSettings(!isXGrid, "isXGrid")} isChecked={isXGrid} /></div>
-                                <div style={{ width: '30%' }}>X-axis grid lines</div>
-                            </div>
-                        </div>
-                        <div className="m-t-10">
-                            <div className="d-flex">
-                            <div style={{width:"15%"}}></div>
-                                <div style={{ width: '5%' }}><Checkbox title="" styleName="default" onChange={() => this.changeSettings(!isXGrida, "isXGrida")} isChecked={isXGrida} /></div>
-                                <div style={{ width: '30%' }}>X-axis grid area</div>
-                            </div>
-                        </div>
-                        <div className="m-t-10">
-                            <div className="d-flex">
-                            <div style={{width:"15%"}}></div>
-                                <div style={{ width: '5%' }}><Checkbox title="" styleName="default" onChange={() => this.changeSettings(!isYGrid, "isYGrid")} isChecked={isYGrid} /></div>
-                                <div style={{ width: '30%' }}>Y-axis grid lines</div>
-                            </div>
-                        </div>
-                        <div className="m-t-10">
-                            <div className="d-flex">
-                            <div style={{width:"15%"}}></div>
-                                <div style={{ width: '5%' }}><Checkbox title="" styleName="default" onChange={() => this.changeSettings(!isYGrida, "isYGrida")} isChecked={isYGrida} /></div>
-                                <div style={{ width: '30%' }}>Y-axis grid area</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
 
             </div>
+
+
+
+        ////////////////////////////Chart Properties Page--->>>/////////////////////////
         var classNameAxis1 = route1 === "chartType" ? "tab_button" + " tab_button_active" : "tab_button"
         var classNameAxis2 = route1 === "grid" ? "tab_button" + " tab_button_active" : "tab_button"
+        var classNameAxis3 = route1 === "axisLines" ? "tab_button" + " tab_button_active" : "tab_button"
         // var classNameTheme = route === "theme" ? "tab_button" + " tab_button_active" : "tab_button"
-        var axisMainPage = route1 === "chartType" ? chartType : grids
+        var axisMainPage = route1 === "chartType" ? chartType : route1 === "grid" ? grids : route1 === "axisLines" ? axisLines : null
 
         var axisPage = <div>
             <div className="main-tab d-flex">
                 <div className={classNameAxis1} onClick={this.setPage.bind(this, "route1", "chartType")}>Chart Type</div>
-                <div className={classNameAxis2} onClick={this.setPage.bind(this, "route1", "grid")}>Grids</div>
+
+                <div className={classNameAxis2} style={{ display: type.value === "pie" ? "none" : "block" }} onClick={this.setPage.bind(this, "route1", "grid")}>Grids & Legends</div>
+                <div className={classNameAxis3} style={{ display: type.value === "pie" ? "none" : "block" }} onClick={this.setPage.bind(this, "route1", "axisLines")}>Axis Lines</div>
+
             </div>
             <div>{axisMainPage}</div>
         </div>
@@ -276,11 +309,15 @@ export default class FieldSettingsModal extends Component {
                 </div>
             </div>
         </div>
+
+
+
+        /////////////////////  Main Settings popup body  ////////////
         var page = route === "title" ? TitlePage : route === "axis" ? axisPage : themePage
         var classNameTitle = route === "title" ? "tab_button" + " tab_button_active" : "tab_button"
         var classNameAxis = route === "axis" ? "tab_button" + " tab_button_active" : "tab_button"
         var classNameTheme = route === "theme" ? "tab_button" + " tab_button_active" : "tab_button"
-        console.log(this.state, "state in chart settings");
+        //  console.log(this.state, "state in chart settings");
 
         return (
             <ModalBody> {/* Popup div here */}

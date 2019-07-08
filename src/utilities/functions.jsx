@@ -20,7 +20,9 @@ export const initilize = () => {
             isYGrida:false,
             isXGrid:false,
             isXGrida:false,
-            
+            isSmooth:false,
+            isInverse:false
+
 
         },
         tableData: DATA,
@@ -63,9 +65,9 @@ export const CHART_CUSTOM_LIST = [
     { value: SCATTER, label: 'Scatter' }, // 3
 ]
 export const POS_LIST = [
-                        {label:"Left", value:"-webkit-left" },
-                        {label:"Center", value:"-webkit-center" },
-                        {label:"Right", value:"-webkit-right" } // 2
+                        {label:"Left", value:"left" },
+                        {label:"Center", value:"center" },
+                        {label:"Right", value:"right" } // 2
 ]
 export const THEMES = [{label:"None", backGroundColor:"#FFFFFF", color:"#000000", titleBackGround:"", chartBackGround:"#FFFFFF", value:"#000000"},
                        {label:"Theme1", backGroundColor:"rgb(198, 246, 198)", color:"#696969", titleBackGround:"", chartBackGround:"rgb(198, 246, 198)", value:"#696969"},
