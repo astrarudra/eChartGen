@@ -65,7 +65,7 @@ export default class WrapChart extends Component {
 
     getChartOptions = (settings, labels, series, selected) => {
         var options = {}
-        var { isXGrid, isYGrid, isXGrida, isYGrida, isXaxis, isYaxis, isLegend, theme, isInverse } = settings
+        var { isXGrid, isYGrid, isXGrida, isYGrida, isXaxis, isYaxis, isLegend, theme, isInverseX, isInverseY1, isInverseY2 } = settings
         console.log(settings, "CHART settings")
         var type = settings.type.value
         var legend = {
@@ -107,7 +107,7 @@ export default class WrapChart extends Component {
                     show: isYaxis
                 },
                 // axisLine:true,
-                 inverse: isInverse,
+                inverse: isInverseY1,
                 showGrid: false,
                 splitLine: {
                     show: isYGrid,
@@ -118,6 +118,7 @@ export default class WrapChart extends Component {
             }, {
                 type: 'value',
                 show: true,
+                inverse: isInverseY2,
                 axisTick: { show: isYaxis },
                 axisLabel: { show: isYaxis },
                 axisLine: {
@@ -132,11 +133,12 @@ export default class WrapChart extends Component {
                 }
             }
             ],
-            xAxis = {
+            xAxis = [{
                 type: 'category',
                 data: labels,
                 name: selected.label,
                 show: true,
+                inverse: isInverseX,
                 axisTick: { show: isXaxis },
                 axisLabel: { show: isXaxis },
                 axisLine: {
@@ -148,8 +150,28 @@ export default class WrapChart extends Component {
                 },
                 splitArea: {
                     show: isXGrida,
-                }
-            }
+                },    
+            },
+            // {
+            //     type: 'category',
+            //     data: labels,
+            //     name: selected.label,
+            //     show: true,
+            //     inverse: isInverseX,
+            //     axisTick: { show: isXaxis },
+            //     axisLabel: { show: isXaxis },
+            //     axisLine: {
+            //         show: isXaxis
+            //     },
+            //     showGrid: true,
+            //     splitLine: {
+            //         show: isXGrid,
+            //     },
+            //     splitArea: {
+            //         show: isXGrida,
+            //     },    
+            // }
+        ]
 
         options.title = title
 
@@ -270,15 +292,17 @@ export default class WrapChart extends Component {
         var subTitleFont = settings.fontSubtitle === undefined ? "15px" : settings.fontSubtitle + "px"
         var backgroundColor = settings.theme === undefined ? "none" : settings.theme.backGroundColor
         var color = settings.theme === undefined ? "black" : settings.theme.color
+        var height = settings.height + "px"
+        var width = settings.width + "%"
 
         //  console.log(backgroundColor,"backgroundColorbackgroundColor");
         return (
-            <div className="wrap-table p-t-10" style={{ padding: "30px", backgroundColor: backgroundColor, borderRadius: "5px", border: "1px solid grey", width: "95%", marginLeft: "2.5%", marginTop: "1vh", padding: "3px" }}>
+            <div className="wrap-table p-t-10" style={{ padding: "30px", backgroundColor: backgroundColor, borderRadius: "5px", border: "1px solid grey", width: width, marginLeft: "2.5%", marginTop: "1vh", padding: "3px" }}>
 
                 <div style={{}}>
                     {showdiv && isMainTitle ? <div style={{}}>
                         <div style={{ width: "100%", backgroundColor: backgroundColor}}>
-                            <div style={{ color: color, border: "1px solid darkgrey", padding:"10px" }}>
+                            <div style={{ color: color, border: "1px solid darkgrey", padding:"7px" }}>
                                 {settings.title && isTitle ? <div style={{ fontSize: titleFont, fontWeight: "bold", textAlign: position  }}>{settings.title}</div> : null}
                                 {settings.subtitle && isSubTitle ? <div style={{ fontSize: subTitleFont, textAlign: position  }}>{settings.subtitle}</div> : null}
                             </div>
@@ -299,14 +323,14 @@ export default class WrapChart extends Component {
                     }) : null
                     }
                 </div>
-                <div style={{ borderRadius: "50px", zIndex: 2 }}> <EchartGen option={chartOption} /> </div>
+                <div style={{ borderRadius: "50px", zIndex: 2 }}> <EchartGen option={chartOption} height={height} width={width} /> </div>
 
                 <div className="btn btn-primary" onClick={() => this.setState({ popup: true })}>Settings</div>
 
 
 
                 <Modal isOpen={popup} toggle={() => this.setState({ popup: !popup })} centered backdrop={true} size='lg'>
-                    <ChartSettingsModal chartSettings={this.chartSettings} getTitlePosition={this.getTitlePosition} toggle={() => this.setState({ popup: !popup })} getChartTitle={this.getChartTitle} applySettings={this.applyChartSettings} chart={this.state} />
+                    <ChartSettingsModal chartSettings={this.chartSettings}  getTitlePosition={this.getTitlePosition} toggle={() => this.setState({ popup: !popup })} getChartTitle={this.getChartTitle} applySettings={this.applyChartSettings} chart={this.state} />
                 </Modal>
             </div>
         )

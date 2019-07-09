@@ -72,6 +72,22 @@ export default class FieldSettingsModal extends Component {
         this.setState({ settings });
     }
 
+    // changeInverseSettings = (mainInverse, propertyMainInverse, propertyInverseX, propertyInverseY1, propertyInverseY2) => {
+    // var {settings} = this.state
+    // settings[propertyMainInverse]=mainInverse
+    // settings[propertyInverseX]=mainInverse
+    // settings[propertyInverseY1]=mainInverse
+    // settings[propertyInverseY2]=mainInverse   
+    // }
+    changeInverseSettings = (mainInverse, propertyMainInverse, propertyInverseX, propertyInverseY1, propertyInverseY2) => {
+        var { settings } = this.state
+        settings[propertyMainInverse] = mainInverse
+        settings[propertyInverseX] = mainInverse
+        settings[propertyInverseY1] = mainInverse
+        settings[propertyInverseY2] = mainInverse
+        this.setState({ settings })
+    }
+
 
 
     render() {
@@ -81,7 +97,8 @@ export default class FieldSettingsModal extends Component {
         var { type, position, title, subtitle, isXGrid = false, isYGrid = false, isXGrida = false, isYGrida = false,
             isMainCartesian = isXGrid || isYGrid, isXaxis = true, isYaxis = true, isMainAxis = isXaxis || isYaxis,
             theme = { label: "None", backGroundColor: "#FFFFFF", color: "#000000", chartBackGround: "#808080", value: "#000000" },
-            isSubTitle = true, isTitle = true, isMainTitle = isSubTitle || isTitle, fontTitle, fontSubtitle, isLegend = true, isSmooth } = settings
+            isSubTitle = true, isTitle = true, isMainTitle = isSubTitle || isTitle, fontTitle, fontSubtitle, isLegend = true, isSmooth,
+            isInverse, isInverseX, isInverseY1, isInverseY2, height, width } = settings
         var AGG_LIST = []
         var metricList = _.filter(fields, o => o.ddField === METRIC)
         metricList.forEach(metric => {
@@ -221,6 +238,35 @@ export default class FieldSettingsModal extends Component {
                     </div>
                 </div>
             </div>
+
+
+
+            <div className="d-flex"> <Checkbox title="" styleName="default"
+                onChange={() => this.changeInverseSettings(!isInverse, "isInverse", "isInverseX", "isInverseY1", "isInverseY2")}
+                isChecked={isInverse} />Inverse Axis</div>
+            <div style={{ display: !isInverse ? "none" : "block" }}>
+                <div className="m-t-10">
+                    <div className="d-flex">
+                        <div style={{ width: "15%" }}></div>
+                        <div style={{ width: '5%' }}><Checkbox title="" styleName="default" onChange={() => this.changeSettings(!isInverseX, "isInverseX")} isChecked={isInverseX} /></div>
+                        <div style={{ width: '30%' }}>X-axis </div>
+                    </div>
+                </div>
+                <div className="m-t-10">
+                    <div className="d-flex">
+                        <div style={{ width: "15%" }}></div>
+                        <div style={{ width: '5%' }}><Checkbox title="" styleName="default" onChange={() => this.changeSettings(!isInverseY1, "isInverseY1")} isChecked={isInverseY1} /></div>
+                        <div style={{ width: '30%' }}>Y1-axis </div>
+                    </div>
+                </div>
+                <div className="m-t-10">
+                    <div className="d-flex">
+                        <div style={{ width: "15%" }}></div>
+                        <div style={{ width: '5%' }}><Checkbox title="" styleName="default" onChange={() => this.changeSettings(!isInverseY2, "isInverseY2")} isChecked={isInverseY2} /></div>
+                        <div style={{ width: '30%' }}>Y2-axis </div>
+                    </div>
+                </div>
+            </div>
             {/* <div className="d-flex"> <Checkbox title="" styleName="default"
             onChange={() => this.changeSettings(!isLegend, "isLegend")}
             isChecked={isLegend} />Legends</div> */}
@@ -310,13 +356,41 @@ export default class FieldSettingsModal extends Component {
             </div>
         </div>
 
+        var dimensionPage = <div>
+             <div className="d-flex">Chart Dimension</div>
+
+            <div className="m-t-10">
+                <div className="d-flex">
+                    <div style={{ width: "13%" }}></div>
+                    <div style={{ width: '18%' }}>Height (px)</div>
+                    <input
+                        type='number'
+                        value={height}
+                        onChange={(e) => this.changeSettings(e.target.value, "height")}>
+                    </input> px
+                </div>
+            </div>
+            <div className="m-t-10">
+                    <div className="d-flex">
+                        <div style={{ width: "13%" }}></div>
+                        <div style={{ width: '18%' }}>Width (%)</div>
+                        <input
+                            type='number'
+                            value={width}
+                            onChange={(e) => this.changeSettings(e.target.value, "width")}>
+                        </input> %
+                    </div>
+                </div>
+        </div>
+
 
 
         /////////////////////  Main Settings popup body  ////////////
-        var page = route === "title" ? TitlePage : route === "axis" ? axisPage : themePage
+        var page = route === "title" ? TitlePage : route === "axis" ? axisPage : route === "theme" ? themePage : route === "dimension" ? dimensionPage : null
         var classNameTitle = route === "title" ? "tab_button" + " tab_button_active" : "tab_button"
         var classNameAxis = route === "axis" ? "tab_button" + " tab_button_active" : "tab_button"
         var classNameTheme = route === "theme" ? "tab_button" + " tab_button_active" : "tab_button"
+        var classNameDimension = route === "dimension" ? "tab_button" + " tab_button_active" : "tab_button"
         //  console.log(this.state, "state in chart settings");
 
         return (
@@ -326,6 +400,7 @@ export default class FieldSettingsModal extends Component {
                         <div className={classNameTitle} onClick={this.setPage.bind(this, "route", "title")}>Chart Title</div>
                         <div className={classNameAxis} onClick={this.setPage.bind(this, "route", "axis")}>Chart Properties</div>
                         <div className={classNameTheme} onClick={this.setPage.bind(this, "route", "theme")}>Themes</div>
+                        <div className={classNameDimension} onClick={this.setPage.bind(this, "route", "dimension")}>Chart Dimensions</div>
                     </div>
                     <div style={{ height: "1vh" }}></div>
                     <div style={{ height: "31vh" }}>{page}</div>

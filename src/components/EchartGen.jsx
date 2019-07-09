@@ -3,13 +3,14 @@ import ReactEcharts from 'echarts-for-react';
 
 class EchartGen extends PureComponent {
   render() {
-    var { option } = this.props
+    var { option, height, width } = this.props
+    console.log(this.props,"Props in echart");
     return (
       <div className='examples'>
         <div className='parent'>
           <ReactEcharts
             option={option}
-            style={{height: '500px', width: '100%'}}
+            style={{height: height, width: "100%"}}
             className='react_for_echarts'
             lazyUpdate={false}
             notMerge={true}

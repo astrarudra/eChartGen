@@ -15,13 +15,18 @@ export const initilize = () => {
             type: CHART_CUSTOM_LIST[0],
             isYaxis: true,
             isXaxis:true,
+            height:"500",
+            width:"100",
             isLegend:true,
             isYGrid:false,
             isYGrida:false,
             isXGrid:false,
             isXGrida:false,
             isSmooth:false,
-            isInverse:false
+            isInverse:false,
+            isInverseX:false,
+            isInverseY1:false,
+            isInverseY2:false
 
 
         },
