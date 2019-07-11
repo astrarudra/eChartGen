@@ -13,10 +13,12 @@ export const initilize = () => {
         route1:"chartType",
         settings: {
             type: CHART_CUSTOM_LIST[0],
+            position: POS_LIST[1],
             isYaxis: true,
             isXaxis:true,
             height:"500",
-            width:"100",
+            width:"95",
+            theme:THEMES[0],
             isLegend:true,
             isYGrid:false,
             isYGrida:false,
@@ -26,7 +28,9 @@ export const initilize = () => {
             isInverse:false,
             isInverseX:false,
             isInverseY1:false,
-            isInverseY2:false
+            isToolTip:true,
+            isInverseY2:false,
+            zScatter: ZSCATTER[0]
 
 
         },
@@ -54,20 +58,25 @@ export const AREA = 'area'
 export const SCATTER = 'scatter'
 export const PIE = 'pie'
 export const CUSTOM = 'custom'
+export const THEMERIVER = 'themeRiver'
 
 export const CHART_LIST = [
     { value: BAR, label: 'Bar Chart' }, // 0
     { value: LINE, label: 'Line Chart' }, // 1
     { value: AREA, label: 'Area Chart' }, // 2
     { value: SCATTER, label: 'Scatter Chart' }, // 3
-    { value: PIE, label: 'Pie Chart' }, // 3
-    { value: CUSTOM, label: 'Custom Chart' }, // 4
+    { value: PIE, label: 'Pie Chart' },
+ //   { value: THEMERIVER, label: 'River Theme Chart' }, // 3
+    { value: CUSTOM, label: 'Custom Chart' },
+  
+    // 4
 ]
 export const CHART_CUSTOM_LIST = [
     { value: BAR, label: 'Bar' }, // 0
     { value: LINE, label: 'Line' }, // 1
     { value: AREA, label: 'Area' }, // 2
-    { value: SCATTER, label: 'Scatter' }, // 3
+    { value: SCATTER, label: 'Scatter' },
+  //  { value: THEMERIVER, label: 'River Theme Chart' } // 3
 ]
 export const POS_LIST = [
                         {label:"Left", value:"left" },
@@ -80,6 +89,11 @@ export const THEMES = [{label:"None", backGroundColor:"#FFFFFF", color:"#000000"
                        {label:"Theme3", backGroundColor:"#228B22", color:"#D3D3D3", titleBackGround:"", chartBackGround:"#808080", value:"#D3D3D3"},
                        {label:"Theme4", backGroundColor:"#FFFF33", color:"#a9baad", titleBackGround:"", chartBackGround:"#808080", value:"#a9baad"}
                       ]
+
+export const ZSCATTER=[ {label:"Total Crimerate", obj:"crimeRate", property:"sum", value:"sumCrime"},
+                        {label:"Average Crimerate", obj:"crimeRate", property:"average", value:"averageCrime"},
+                        {label:"Total Population", obj:"population", property:"sum", value:"sumPopulation"},
+                        {label:"Average Population", obj:"population", property:"average", value:"averagePopulation"} ]
 
 const getLists = (fields) => {
     var attributeList = _.filter(fields, 'isSelected')
@@ -122,11 +136,11 @@ export const genEyeFilter = (lists) => {
 
 const flattenChildren = (treeData) => {
     var list = []
-    console.log(treeData, "tree data in flattenCHildren");
+   // console.log(treeData, "tree data in flattenCHildren");
     treeData.forEach(o => {
         if(o.isGroup){
          list = [...list, ...flattenChildren(o.children)]
-        console.log(list,"List in list flattenChildren");
+       // console.log(list,"List in list flattenChildren");
         }
         else list.push(o)
      })

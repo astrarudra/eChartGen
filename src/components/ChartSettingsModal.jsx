@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import { ModalBody } from 'reactstrap';
 import _ from 'lodash'
 
-import { CHART_LIST, METRIC, BAR, CHART_CUSTOM_LIST, POS_LIST, THEMES } from '../utilities/functions'
+import { CHART_LIST, METRIC, BAR, CHART_CUSTOM_LIST, POS_LIST, THEMES, ZSCATTER } from '../utilities/functions'
 import SelectDD from './SelectDD';
 
 const Checkbox = ({ styleName, title, isChecked, onChange, style, prefix, returnObj }) => (
@@ -32,7 +32,7 @@ export default class FieldSettingsModal extends Component {
     }
 
     changeSettings = (selected, property) => {
-        console.log(selected, property, "selected, propertyselected, property");
+        // console.log(selected, property, "selected, propertyselected, property");
         var { settings } = this.state
         settings[property] = selected
         this.setState({ settings })
@@ -94,11 +94,10 @@ export default class FieldSettingsModal extends Component {
         //   console.log(THEMES, "Check Themes");
         var { chartSettings, toggle } = this.props;
         var { settings, fields, route, route1 } = this.state
-        var { type, position, title, subtitle, isXGrid = false, isYGrid = false, isXGrida = false, isYGrida = false,
+        var { type, zScatter, position, title, subtitle, isXGrid = false, isYGrid = false, isXGrida = false, isYGrida = false,
             isMainCartesian = isXGrid || isYGrid, isXaxis = true, isYaxis = true, isMainAxis = isXaxis || isYaxis,
-            theme = { label: "None", backGroundColor: "#FFFFFF", color: "#000000", chartBackGround: "#808080", value: "#000000" },
-            isSubTitle = true, isTitle = true, isMainTitle = isSubTitle || isTitle, fontTitle, fontSubtitle, isLegend = true, isSmooth,
-            isInverse, isInverseX, isInverseY1, isInverseY2, height, width } = settings
+            theme, isSubTitle = true, isTitle = true, isMainTitle = isSubTitle || isTitle, fontTitle, fontSubtitle, isLegend = true, isSmooth,
+            isInverse, isInverseX, isInverseY1, isInverseY2, height, width, isToolTip } = settings
         var AGG_LIST = []
         var metricList = _.filter(fields, o => o.ddField === METRIC)
         metricList.forEach(metric => {
@@ -109,7 +108,7 @@ export default class FieldSettingsModal extends Component {
                 AGG_LIST.push(o)
             })
         })
-        console.log(settings, "settingssettingssettingssettingssettingssettingssettings");
+        // console.log(settings, "settingssettingssettingssettingssettingssettingssettings");
         ///////////Title Page Chart Popup ///////
         var TitlePage = <div>
             <div className="d-flex"> <Checkbox title="" styleName="default"
@@ -186,7 +185,18 @@ export default class FieldSettingsModal extends Component {
             </div>
 
             {type.value !== "pie" ? <div>
-                <div style={{ height: "2vh" }}></div>
+                <div style={{ height: "1vh" }}></div>
+                <div style={{ display: type.value === "scatter" || type.value === "custom" ? "block" : "none" }}>
+                    <div className="m-t-10">
+                        <div className="d-flex">
+                            <div style={{ width: '50%' }}>Z-value(Scatter Chart)</div>
+                            <div style={{ width: '50%', zIndex: 11 }}>
+                                <SelectDD data={ZSCATTER} onChange={(o) => this.changeSettings(o, "zScatter")} selected={zScatter} isClearable={false} />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style={{ height: "1vh" }}></div>
                 <div style={{ display: type.value !== "pie" && type.value !== "bar" && type.value !== "scatter" ? "block" : "none" }}>
                     <div className="d-flex"> <Checkbox title="" styleName="default"
                         onChange={() => this.changeSettings(!isSmooth, "isSmooth")}
@@ -327,14 +337,19 @@ export default class FieldSettingsModal extends Component {
 
             </div>
 
+        var toolTip = <div className="d-flex"> <Checkbox title="" styleName="default"
+            onChange={() => this.changeSettings(!isToolTip, "isToolTip")}
+            isChecked={isToolTip} />Tooltip</div>
+
 
 
         ////////////////////////////Chart Properties Page--->>>/////////////////////////
         var classNameAxis1 = route1 === "chartType" ? "tab_button" + " tab_button_active" : "tab_button"
         var classNameAxis2 = route1 === "grid" ? "tab_button" + " tab_button_active" : "tab_button"
         var classNameAxis3 = route1 === "axisLines" ? "tab_button" + " tab_button_active" : "tab_button"
+        var classNameAxis4 = route1 === "tooltip" ? "tab_button" + " tab_button_active" : "tab_button"
         // var classNameTheme = route === "theme" ? "tab_button" + " tab_button_active" : "tab_button"
-        var axisMainPage = route1 === "chartType" ? chartType : route1 === "grid" ? grids : route1 === "axisLines" ? axisLines : null
+        var axisMainPage = route1 === "chartType" ? chartType : route1 === "grid" ? grids : route1 === "axisLines" ? axisLines : route1 === "tooltip" ? toolTip : null
 
         var axisPage = <div>
             <div className="main-tab d-flex">
@@ -342,6 +357,7 @@ export default class FieldSettingsModal extends Component {
 
                 <div className={classNameAxis2} style={{ display: type.value === "pie" ? "none" : "block" }} onClick={this.setPage.bind(this, "route1", "grid")}>Grids & Legends</div>
                 <div className={classNameAxis3} style={{ display: type.value === "pie" ? "none" : "block" }} onClick={this.setPage.bind(this, "route1", "axisLines")}>Axis Lines</div>
+                <div className={classNameAxis4} onClick={this.setPage.bind(this, "route1", "tooltip")}>Tooltip</div>
 
             </div>
             <div>{axisMainPage}</div>
@@ -350,14 +366,33 @@ export default class FieldSettingsModal extends Component {
         var themePage = <div className="m-t-10">
             <div className="d-flex">
                 <div style={{ width: '50%' }}>Theme</div>
-                <div style={{ width: '50%', zIndex: 14 }}><SelectDD data={THEMES} onChange={(o) => this.changeSettings(o, "theme")} selected={theme} />
-                    {/* <SelectDD data={THEMES} onChange={(o) => this.changeSettings(o, "theme")} selected={theme} /> */}
+                <div style={{ width: '50%', zIndex: 14 }}>
+                    <SelectDD data={THEMES} onChange={(o) => this.changeSettings(o, "theme")} selected={theme} />
                 </div>
             </div>
+            <div style={{height:"3vh"}}></div>
+            
+            <div className="d-flex">
+            <div style={{ width: "10%" }}></div>
+            <div style={{ width: "25%", height:"4vh" }}>Background color</div> <div style={{width:"5%"}}></div> <div style={{height:"15px", border:"2px solid grey", width:"15px", marginTop:"7px", backgroundColor:theme.backGroundColor}}></div>
+            </div>
+            <div className="d-flex">
+            <div style={{ width: "10%" }}></div>
+            <div style={{ width: "25%", height:"4vh" }}>Chart background color</div> <div style={{width:"5%"}}></div> <div  style={{height:"15px", border:"2px solid grey", width:"15px", marginTop:"7px", backgroundColor:theme.chartBackGround}}></div>
+            </div>
+            <div className="d-flex">
+            <div style={{ width: "10%" }}></div>
+            <div style={{ width: "25%", height:"4vh" }}>Title color</div> <div style={{width:"5%"}}></div> <div  style={{height:"15px", border:"2px solid grey", width:"15px", marginTop:"7px", backgroundColor:theme.color}}></div>
+            </div>
+            <div className="d-flex">
+            <div style={{ width: "10%" }}></div>
+            <div style={{ width: "25%", height:"4vh" }}>Title background color</div> <div style={{width:"5%"}}></div> <div  style={{height:"15px", border:"2px solid grey", width:"15px", marginTop:"7px", backgroundColor:theme.titleBackGround}}></div>
+            </div>
+         
         </div>
 
         var dimensionPage = <div>
-             <div className="d-flex">Chart Dimension</div>
+            <div className="d-flex">Chart Dimension</div>
 
             <div className="m-t-10">
                 <div className="d-flex">
@@ -371,16 +406,16 @@ export default class FieldSettingsModal extends Component {
                 </div>
             </div>
             <div className="m-t-10">
-                    <div className="d-flex">
-                        <div style={{ width: "13%" }}></div>
-                        <div style={{ width: '18%' }}>Width (%)</div>
-                        <input
-                            type='number'
-                            value={width}
-                            onChange={(e) => this.changeSettings(e.target.value, "width")}>
-                        </input> %
+                <div className="d-flex">
+                    <div style={{ width: "13%" }}></div>
+                    <div style={{ width: '18%' }}>Width (%)</div>
+                    <input
+                        type='number'
+                        value={width}
+                        onChange={(e) => this.changeSettings(e.target.value, "width")}>
+                    </input> %
                     </div>
-                </div>
+            </div>
         </div>
 
 
@@ -395,7 +430,7 @@ export default class FieldSettingsModal extends Component {
 
         return (
             <ModalBody> {/* Popup div here */}
-                <div style={{ height: "40vh" }}>
+                <div style={{ height: "44vh" }}>
                     <div className="main-tab d-flex">
                         <div className={classNameTitle} onClick={this.setPage.bind(this, "route", "title")}>Chart Title</div>
                         <div className={classNameAxis} onClick={this.setPage.bind(this, "route", "axis")}>Chart Properties</div>
@@ -403,7 +438,7 @@ export default class FieldSettingsModal extends Component {
                         <div className={classNameDimension} onClick={this.setPage.bind(this, "route", "dimension")}>Chart Dimensions</div>
                     </div>
                     <div style={{ height: "1vh" }}></div>
-                    <div style={{ height: "31vh" }}>{page}</div>
+                    <div style={{ height: "35vh" }}>{page}</div>
                     <div className="m-t-10">
                     </div>
                     <div className="btn btn-sm btn-primary" onClick={this.apply}>Apply</div>
