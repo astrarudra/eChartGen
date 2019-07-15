@@ -337,9 +337,14 @@ export default class FieldSettingsModal extends Component {
 
             </div>
 
-        var toolTip = <div className="d-flex"> <Checkbox title="" styleName="default"
-            onChange={() => this.changeSettings(!isToolTip, "isToolTip")}
-            isChecked={isToolTip} />Tooltip</div>
+        var otherSettings = <div>
+            <div>Other Settings</div>
+            <div className="d-flex">
+                <div style={{ width: "15%" }}></div>
+                <Checkbox title="" styleName="default"
+                    onChange={() => this.changeSettings(!isToolTip, "isToolTip")}
+                    isChecked={isToolTip} />Tooltip</div>
+        </div>
 
 
 
@@ -347,9 +352,9 @@ export default class FieldSettingsModal extends Component {
         var classNameAxis1 = route1 === "chartType" ? "tab_button" + " tab_button_active" : "tab_button"
         var classNameAxis2 = route1 === "grid" ? "tab_button" + " tab_button_active" : "tab_button"
         var classNameAxis3 = route1 === "axisLines" ? "tab_button" + " tab_button_active" : "tab_button"
-        var classNameAxis4 = route1 === "tooltip" ? "tab_button" + " tab_button_active" : "tab_button"
+        var classNameAxis4 = route1 === "others" ? "tab_button" + " tab_button_active" : "tab_button"
         // var classNameTheme = route === "theme" ? "tab_button" + " tab_button_active" : "tab_button"
-        var axisMainPage = route1 === "chartType" ? chartType : route1 === "grid" ? grids : route1 === "axisLines" ? axisLines : route1 === "tooltip" ? toolTip : null
+        var axisMainPage = route1 === "chartType" ? chartType : route1 === "grid" ? grids : route1 === "axisLines" ? axisLines : route1 === "others" ? otherSettings : null
 
         var axisPage = <div>
             <div className="main-tab d-flex">
@@ -357,7 +362,7 @@ export default class FieldSettingsModal extends Component {
 
                 <div className={classNameAxis2} style={{ display: type.value === "pie" ? "none" : "block" }} onClick={this.setPage.bind(this, "route1", "grid")}>Grids & Legends</div>
                 <div className={classNameAxis3} style={{ display: type.value === "pie" ? "none" : "block" }} onClick={this.setPage.bind(this, "route1", "axisLines")}>Axis Lines</div>
-                <div className={classNameAxis4} onClick={this.setPage.bind(this, "route1", "tooltip")}>Tooltip</div>
+                <div className={classNameAxis4} onClick={this.setPage.bind(this, "route1", "others")}>Other Settings</div>
 
             </div>
             <div>{axisMainPage}</div>

@@ -84,26 +84,26 @@ export default class WrapChart extends Component {
         var options = {}
         var { isXGrid, isYGrid, isXGrida, isYGrida, isXaxis, isYaxis, isLegend, theme, isInverseX, isInverseY1, isInverseY2, isToolTip } = settings
       //  console.log(settings, "CHART settings")
-     var singleAxis= {
-        top: 50,
-        bottom: 50,
-        axisTick: {},
-        axisLabel: {},
-        type: 'time',
-        axisPointer: {
-            animation: true,
-            label: {
-                show: true
-            }
-        },
-        splitLine: {
-            show: true,
-            lineStyle: {
-                type: 'dashed',
-                opacity: 0.2
-            }
-        }
-    }
+    //  var singleAxis= {
+    //     top: 50,
+    //     bottom: 50,
+    //     axisTick: {},
+    //     axisLabel: {},
+    //     type: 'time',
+    //     axisPointer: {
+    //         animation: true,
+    //         label: {
+    //             show: true
+    //         }
+    //     },
+    //     splitLine: {
+    //         show: true,
+    //         lineStyle: {
+    //             type: 'dashed',
+    //             opacity: 0.2
+    //         }
+    //     }
+    // }
         var type = settings.type.value
         var legend = {
             show: isLegend,
@@ -288,6 +288,11 @@ export default class WrapChart extends Component {
                 center: [(100 / (pieCount + 1) * count) + "%", '50%'],
             }
         }
+        else if(type === 'waterFall'){
+            _obj = {
+                type: 'bar'
+            }
+        }
         else {
             _obj = {
                 type: type,
@@ -321,9 +326,10 @@ export default class WrapChart extends Component {
                 if (o.fieldProp.yAxis[p]) obj.yAxisIndex = 1
                 
                 data = getSeries(dispTableData, o.value, p, type, labels,  buttons[0].selected.value, settings.zScatter)
-                if(type!=='themeRiver'){
+                // if(type!=='themeRiver'){
+                // obj.data = data
+                // }
                 obj.data = data
-                }
                 // else {
                 //     data.map(m=>{
                 //         m.push( p + " " + o.label)
@@ -331,7 +337,22 @@ export default class WrapChart extends Component {
                 //     obj.data=data
                 // }
                 obj.symbolSize = function (data) {
-                    return data[2]/40;
+                    var result;
+                   if(data[2] < 1000) {
+                        var d = data[2]*1000
+                        var num = String(d)
+                        var change = num.substring(0,2)
+                        result = parseInt(change)
+                     }
+                     else {
+                        var num = String(data[2])
+                        var change = num.substring(0,2)
+                        result = parseInt(change) 
+                     }
+                    return result;
+                }
+                if(type === "waterFall"){
+                  obj.stack= "show"
                 }
                 obj.name = p + " " + o.label
                 obj.smooth = settings.isSmooth

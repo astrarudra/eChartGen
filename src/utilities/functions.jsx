@@ -59,6 +59,7 @@ export const SCATTER = 'scatter'
 export const PIE = 'pie'
 export const CUSTOM = 'custom'
 export const THEMERIVER = 'themeRiver'
+export const WATERFALL = 'waterFall'
 
 export const CHART_LIST = [
     { value: BAR, label: 'Bar Chart' }, // 0
@@ -66,8 +67,10 @@ export const CHART_LIST = [
     { value: AREA, label: 'Area Chart' }, // 2
     { value: SCATTER, label: 'Scatter Chart' }, // 3
     { value: PIE, label: 'Pie Chart' },
+    { value: WATERFALL, label: 'Waterfall' },
  //   { value: THEMERIVER, label: 'River Theme Chart' }, // 3
     { value: CUSTOM, label: 'Custom Chart' },
+    
   
     // 4
 ]
