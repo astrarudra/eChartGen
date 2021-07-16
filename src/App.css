@@ -1,3 +1,39 @@
+.header {
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border-bottom: 1px solid grey;
+}
+
+.main-compo-wrap { 
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid grey;
+  width: calc(100% - 30px);
+  margin: auto auto;
+}
+.btn-dark {
+    color: #fff;
+    background-color: #343a40;
+    border-color: #343a40;
+}
+.btn {
+    padding: 3px 10px;
+    font-size: inherit;
+}
+.settings {
+  height: 200px;
+  padding: 10px;
+  overflow: hidden scroll;
+}
+.wrap-table{
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid grey;
+  width: calc(100% - 30px);
+  margin: auto;
+}
+
 .button-wrap {
   display: inline-block;
   margin-right: 10px;
@@ -29,19 +65,14 @@
 
 /* Create an active/current tablink class */
 .tab_button_active {
-  border-top-left-radius: 10px;
-  border-bottom-left-radius: -10px;
-  border-bottom-left-radius: -10px;
-  border-right: 1px solid darkgrey;
-  border-left: 1px solid darkgrey;
-  border-top: 1px solid darkgrey;
-  border-top-right-radius: 10px;
+  border: 1px solid grey;
   background-color: white;
-  border-bottom: white;
+  border-bottom: transparent;
+  border-radius: 5px 5px 0px 0px
 }
 .tab_button{
-  transition: 0.3s;
-  padding:10px;
+  cursor: pointer;
+  padding: 5px 10px;
 }
 
 /* Style the tab content */
@@ -54,7 +85,5 @@
 
 /* Style for button page */
 .main-tab{
-  /* border:1px solid lightgrey; */
-  padding:10  px;
-  background-color: antiquewhite;
+  border-bottom:1px solid lightgrey;
 }

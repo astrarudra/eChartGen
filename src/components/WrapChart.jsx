@@ -381,7 +381,11 @@ export default class WrapChart extends Component {
         var height = settings.height + "px"
         var width = settings.width + "%"
         return (
-            <div className="wrap-table p-t-10" style={{ padding: "30px", backgroundColor: backgroundColor, borderRadius: "5px", border: "1px solid grey", width: width, marginLeft: "2.5%", marginTop: "1vh", padding: "3px" }}>
+            <>
+            <div className="header">eCharts Playground</div>
+            <ChartSettingsModal chartSettings={this.chartSettings}  getTitlePosition={this.getTitlePosition} toggle={() => this.setState({ popup: !popup })} getChartTitle={this.getChartTitle} applySettings={this.applyChartSettings} chart={this.state} />
+
+            <div className="wrap-table" style={{ backgroundColor: backgroundColor, width: width }}>
 
                 <div style={{}}>
                     {showdiv && isMainTitle ? <div style={{}}>
@@ -408,15 +412,8 @@ export default class WrapChart extends Component {
                     }
                 </div>
                 <div style={{ borderRadius: "50px", zIndex: 2 }}> <EchartGen option={chartOption} height={height} width={width} /> </div>
-
-                <div className="btn btn-primary" onClick={() => this.setState({ popup: true })}>Settings</div>
-
-
-
-                <Modal isOpen={popup} toggle={() => this.setState({ popup: !popup })} centered backdrop={true} size='lg'>
-                    <ChartSettingsModal chartSettings={this.chartSettings}  getTitlePosition={this.getTitlePosition} toggle={() => this.setState({ popup: !popup })} getChartTitle={this.getChartTitle} applySettings={this.applyChartSettings} chart={this.state} />
-                </Modal>
             </div>
+            </>
         )
     }
 }

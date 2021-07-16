@@ -92,9 +92,7 @@ export default class FieldSettingsModal extends Component {
     // }
 
 
-
     render() {
-        //   console.log(THEMES, "Check Themes");
         var { chartSettings, toggle } = this.props;
         var { settings, fields, route, route1 } = this.state
         var { type, zScatter, position, title, subtitle, isXGrid = false, isYGrid = false, isXGrida = false, isYGrida = false,
@@ -111,9 +109,7 @@ export default class FieldSettingsModal extends Component {
                 AGG_LIST.push(o)
             })
         })
-        // console.log(settings, "settingssettingssettingssettingssettingssettingssettings");
-        ///////////Title Page Chart Popup ///////
-        var TitlePage = <div>
+        const TitlePage = () => <div>
             <div className="d-flex"> <Checkbox title="" styleName="default"
                 onChange={() => this.changeSettings(!isMainTitle, ["isMainTitle", "isTitle", "isSubTitle"])}
                 isChecked={isMainTitle} />Chart Title</div>
@@ -173,10 +169,7 @@ export default class FieldSettingsModal extends Component {
                 </div>
             </div>
         </div>
-
-        ///////////////////////////Chart properties-->Chart Type////////////////////////
-
-        var chartType = <div>
+        const ChartType = () => <div>
             <div style={{ height: "1vh" }}></div>
             <div className="m-t-10">
                 <div className="d-flex">
@@ -229,9 +222,7 @@ export default class FieldSettingsModal extends Component {
                 </div>
             </div> : null}
         </div>
-
-        //////////////////////////Chart properties--> Grid Tab  ////////////////////////
-        var axisLines = <div style={{ width: "50%" }}>
+        const AxisLines = () => <div style={{ width: "50%" }}>
             <div className="d-flex"> <Checkbox title="" styleName="default"
                 onChange={() => this.changeSettings(!isMainAxis, ["isMainAxis", "isXaxis", "isYaxis"])}
                 isChecked={isMainAxis} />Axis Lines</div>
@@ -285,9 +276,8 @@ export default class FieldSettingsModal extends Component {
             isChecked={isLegend} />Legends</div> */}
 
         </div>
-        var grids =
-            //////// Axis line option default axis lines are true
-            <div className="d-flex">
+        // Axis line option default axis lines are true
+        const Grids = () => <div className="d-flex">
                 <div style={{ width: "50%" }}>
                     {/* <div className="d-flex"> <Checkbox title="" styleName="default"
                         onChange={() => this.changeMainSettings(!isMainAxis, "isMainAxis", "isXaxis", "isYaxis")}
@@ -339,8 +329,7 @@ export default class FieldSettingsModal extends Component {
 
 
             </div>
-
-        var otherSettings = <div>
+        const OtherSettings = () => <div>
             <div>Other Settings</div>
             <div className="d-flex">
                 <div style={{ width: "15%" }}></div>
@@ -348,30 +337,7 @@ export default class FieldSettingsModal extends Component {
                     onChange={() => this.changeSettings(!isToolTip, ["isToolTip"])}
                     isChecked={isToolTip} />Tooltip</div>
         </div>
-
-
-
-        ////////////////////////////Chart Properties Page--->>>/////////////////////////
-        var classNameAxis1 = route1 === "chartType" ? "tab_button" + " tab_button_active" : "tab_button"
-        var classNameAxis2 = route1 === "grid" ? "tab_button" + " tab_button_active" : "tab_button"
-        var classNameAxis3 = route1 === "axisLines" ? "tab_button" + " tab_button_active" : "tab_button"
-        var classNameAxis4 = route1 === "others" ? "tab_button" + " tab_button_active" : "tab_button"
-        // var classNameTheme = route === "theme" ? "tab_button" + " tab_button_active" : "tab_button"
-        var axisMainPage = route1 === "chartType" ? chartType : route1 === "grid" ? grids : route1 === "axisLines" ? axisLines : route1 === "others" ? otherSettings : null
-
-        var axisPage = <div>
-            <div className="main-tab d-flex">
-                <div className={classNameAxis1} onClick={this.setPage.bind(this, "route1", "chartType")}>Chart Type</div>
-
-                <div className={classNameAxis2} style={{ display: type.value === "pie" ? "none" : "block" }} onClick={this.setPage.bind(this, "route1", "grid")}>Grids & Legends</div>
-                <div className={classNameAxis3} style={{ display: type.value === "pie" ? "none" : "block" }} onClick={this.setPage.bind(this, "route1", "axisLines")}>Axis Lines</div>
-                <div className={classNameAxis4} onClick={this.setPage.bind(this, "route1", "others")}>Other Settings</div>
-
-            </div>
-            <div>{axisMainPage}</div>
-        </div>
-
-        var themePage = <div className="m-t-10">
+        const ThemePage = () => <div className="m-t-10">
             <div className="d-flex">
                 <div style={{ width: '50%' }}>Theme</div>
                 <div style={{ width: '50%', zIndex: 14 }}>
@@ -399,7 +365,7 @@ export default class FieldSettingsModal extends Component {
          
         </div>
 
-        var dimensionPage = <div>
+        const DimensionPage = () => <div>
             <div className="d-flex">Chart Dimension</div>
 
             <div className="m-t-10">
@@ -426,34 +392,27 @@ export default class FieldSettingsModal extends Component {
             </div>
         </div>
 
-
-
-        /////////////////////  Main Settings popup body  ////////////
-        var page = route === "title" ? TitlePage : route === "axis" ? axisPage : route === "theme" ? themePage : route === "dimension" ? dimensionPage : null
-        var classNameTitle = route === "title" ? "tab_button" + " tab_button_active" : "tab_button"
-        var classNameAxis = route === "axis" ? "tab_button" + " tab_button_active" : "tab_button"
-        var classNameTheme = route === "theme" ? "tab_button" + " tab_button_active" : "tab_button"
-        var classNameDimension = route === "dimension" ? "tab_button" + " tab_button_active" : "tab_button"
-        //  console.log(this.state, "state in chart settings");
-
+        const pageMap = {
+            "chartType": {name: "Chart Type", component: ChartType},
+            "title": {name: "Title", component: TitlePage},
+            "theme": {name: "Theme", component: ThemePage},
+            "grid": {name: "Grid", component: Grids},
+            "axisLines": {name: "Axis Lines", component: AxisLines},
+            "others": {name: "Tooltip", component: OtherSettings},
+            "dimension": {name: "Chart Dimensions", component: DimensionPage},
+        }
         return (
-            <ModalBody> {/* Popup div here */}
-                <div style={{ height: "44vh" }}>
-                    <div className="main-tab d-flex">
-                        <div className={classNameTitle} onClick={this.setPage.bind(this, "route", "title")}>Chart Title</div>
-                        <div className={classNameAxis} onClick={this.setPage.bind(this, "route", "axis")}>Chart Properties</div>
-                        <div className={classNameTheme} onClick={this.setPage.bind(this, "route", "theme")}>Themes</div>
-                        <div className={classNameDimension} onClick={this.setPage.bind(this, "route", "dimension")}>Chart Dimensions</div>
-                    </div>
-                    <div style={{ height: "1vh" }}></div>
-                    <div style={{ height: "35vh" }}>{page}</div>
-                    <div className="m-t-10">
-                    </div>
-                    <div className="btn btn-sm btn-primary" onClick={this.apply}>Apply</div>
-                    <span style={{ width: "10px" }}> </span>
-                    <div className="btn btn-sm btn-primary m-l-10" onClick={toggle}>Cancel</div>
+            <div className="settings">
+                <div className="main-tab d-flex">
+                    {_.keys(pageMap).map(k => <div className={route === k ? "tab_button tab_button_active" : "tab_button"} onClick={this.setPage.bind(this, "route", k)}>{pageMap[k].name}</div>)}
                 </div>
-            </ModalBody>
+                <div>{pageMap[route].component()}</div>
+                <div className="m-t-10">
+                </div>
+                <div className="btn btn-sm btn-primary" onClick={this.apply}>Apply</div>
+                <span style={{ width: "10px" }}> </span>
+                <div className="btn btn-sm btn-primary m-l-10" onClick={toggle}>Cancel</div>
+            </div>
         )
     }
 }
